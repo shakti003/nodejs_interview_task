@@ -69,23 +69,31 @@ userSchema.methods.toGenerateToken = async function(){
 
 // Hasing password
 userSchema.pre("save", async function(next){
-    if(this.isModified("password")){
+    try {
+        if(this.isModified("password")){
 
-        this.password = await bcrypt.hash(this.password, 10);
-        this.confipassword = await bcrypt.hash(this.confipassword, 10);
+            this.password = await bcrypt.hash(this.password, 10);
+            this.confipassword = await bcrypt.hash(this.confipassword, 10);
+            
+        }
+            next();
         
+    } catch (error) {
+        
+        res.send(error);
     }
-        next();
+    
     
 })
 
+// Hasing Update Password
 userSchema.pre("updateOne", async function(next){
     try {
 
-        if(this._update.password){
+        if(this._update.$set.password){
     
-            this._update.password = await bcrypt.hash(this._update.password , 10);
-            this._update.confipassword = await bcrypt.hash(this._update.confipassword, 10)
+            this._update.$set.password = await bcrypt.hash(this._update.$set.password , 10);
+            this._update.$set.confipassword = await bcrypt.hash(this._update.$set.confipassword, 10)
         }
     
         next();

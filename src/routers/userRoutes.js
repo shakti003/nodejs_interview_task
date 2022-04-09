@@ -88,6 +88,39 @@ userRoutes.post("/login",async(req,res) =>{
     }
 })
 
+// User Changepassword
+userRoutes.put('/changepassword',auth,async(req, res) =>{
+    try {
+        const checkEmail = await userData.findOne({email : req.body.email})
+        const password = req.body.password
+        const confipassword = req.body.confipassword
+        
+        
+        if(checkEmail){
+
+            if(password === confipassword){
+               const data = await userData.updateOne({_id : checkEmail._id},{$set : {password : password,confipassword : confipassword}})
+               
+                console.log(data);
+                res.send("Password change success....")
+
+            }else{
+                res.send("Password is not matched.>>>")
+            }
+
+        }else{
+            res.send("Your Email is not register ......")
+
+        }
+
+
+    } catch (error) {
+        res.send(error);
+    }
+   
+})
+
+//Logout user
 userRoutes.post("/logout",auth,async(req,res) =>{
     try {
         
@@ -107,38 +140,6 @@ userRoutes.post("/logout",auth,async(req,res) =>{
     }
 })
 
-userRoutes.put('/changepassword',auth,async(req, res) =>{
-    try {
-        const checkEmail = await userData.findOne({email : req.body.email})
-        const password = req.body.password
-        const confipassword = req.body.confipassword
-        
-        
-        if(checkEmail){
 
-            if(password === confipassword){
-               const data = await userData.updateOne({_id : checkEmail._id},{$set : {password : password,confipassword : confipassword}})
-               //const data = await userData.findOneAndUpdate({password : password},{confipassword : confipassword})
-                console.log(data);
-                res.send(data)
-
-            }else{
-                res.send("Password is not matched.>>>")
-            }
-
-        }else{
-            res.send("Email is not exist......")
-
-        }
-
-
-
-    } catch (error) {
-        res.send(error);
-    }
-
-    
-    
-})
 
 module.exports = userRoutes;
