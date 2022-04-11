@@ -67,7 +67,7 @@ userRoutes.post("/login",async(req,res) =>{
         
                 //Cookie generating
                 res.cookie("jwt",token,{
-                    expires : new Date(Date.now + 3600000), // Token expired in 24 Hours
+                    expires : new Date(Date.now + 86400000), // Token expired in 24 Hours
                     httpOnly : true
                 })
                 
